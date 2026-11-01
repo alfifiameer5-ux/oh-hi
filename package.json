@@ -1,11 +1,16 @@
+
 {
   "name": "oh-hi",
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "description": "oh hi website",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "5.1.0"
   }
 }
