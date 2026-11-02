@@ -159,9 +159,7 @@ async function getLocation(ip) {
   for (const p of providers) {
     try {
       const res = await p();
-      if (res.country && res.country !== "Unknown Country") {
-        return res;
-      }
+      if (res.country && res.country !== "Unknown Country") return res;
     } catch (e) {}
   }
 
@@ -175,7 +173,7 @@ async function getLocation(ip) {
   };
 }
 
-// ---------- Visitor Clickbait Landing Page ----------
+// ---------- PAGE 1: Landing Page (The Bait) ----------
 app.get("/", (req, res) => {
   const n = res.locals.nonce;
   res.type("html").send(`<!DOCTYPE html>
@@ -190,32 +188,36 @@ app.get("/", (req, res) => {
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#000000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,monospace;overflow:hidden;display:flex;align-items:center;justify-content:center}
 canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.25;pointer-events:none}
-main{position:relative;z-index:2;width:92%;max-width:480px;text-align:center;padding:20px}
+main{position:relative;z-index:2;width:92%;max-width:520px;text-align:center;padding:24px}
 
 .badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,40,40,.15);border:1px solid rgba(255,50,50,.4);padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:1.5px;color:#ff5252;margin-bottom:24px;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.04);opacity:.85}}
 .dot{width:7px;height:7px;background:#ff3333;border-radius:50%;box-shadow:0 0 8px #ff3333}
 
-h1{font-size:clamp(68px,16vw,110px);font-weight:900;letter-spacing:-2px;line-height:1;margin:0 0 16px;background:linear-gradient(180deg,#fff,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 40px rgba(255,255,255,.2)}
+h1{font-size:clamp(68px,16vw,110px);font-weight:900;letter-spacing:-2px;line-height:1;margin:0 0 16px;background:linear-gradient(180deg,#fff,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .sub{color:#9e9e9e;font-size:14px;line-height:1.6;margin-bottom:34px}
-.sub strong{color:#fff;font-weight:600}
 
-.cta-box{position:relative;display:inline-block;width:100%}
-button{width:100%;background:#ffffff;color:#000000;border:0;padding:18px 24px;font-size:14px;font-weight:700;letter-spacing:2px;border-radius:6px;cursor:pointer;transition:all .2s ease;box-shadow:0 0 25px rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;gap:10px}
+button{width:100%;background:#ffffff;color:#000000;border:0;padding:18px 24px;font-size:14px;font-weight:800;letter-spacing:2px;border-radius:6px;cursor:pointer;transition:all .2s ease;box-shadow:0 0 25px rgba(255,255,255,.15)}
 button:hover{background:#f0f0f0;transform:translateY(-2px);box-shadow:0 0 35px rgba(255,255,255,.3)}
-button:active{transform:translateY(0)}
 button:disabled{opacity:.6;cursor:wait;transform:none}
 
 .disclaimer{color:#444;font-size:11px;margin-top:22px;letter-spacing:.5px}
 .hidden{display:none!important}
 
-#reveal-box{animation:fadeIn .6s ease forwards}
-@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
-.reveal-text{font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:12px;color:#fff}
-.reveal-sub{color:#777;font-size:14px;line-height:1.6}
-.bar{height:2px;background:#1a1a1a;margin:28px auto 0;width:160px;border-radius:2px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:#fff;animation:fill 1.2s ease forwards}
-@keyframes fill{to{width:100%}}
+#reveal-box{animation:glitchIn .4s cubic-bezier(.25,1,.5,1) forwards}
+@keyframes glitchIn{
+  0%{opacity:0;transform:scale(.9) translateY(20px);filter:brightness(2)}
+  50%{transform:scale(1.05) translateY(-5px)}
+  100%{opacity:1;transform:scale(1) translateY(0);filter:none}
+}
+
+.hacked-title{font-size:clamp(28px,7vw,42px);font-weight:900;line-height:1.2;margin-bottom:16px;color:#ff3333;text-shadow:0 0 20px rgba(255,50,50,.6);letter-spacing:-0.5px}
+.hacked-desc{color:#bbb;font-size:14px;line-height:1.7;margin-bottom:24px}
+.safe-badge{display:inline-block;background:#152217;border:1px solid #2d6635;color:#4ade80;font-size:12px;padding:6px 12px;border-radius:4px;margin-bottom:24px}
+
+.nav-links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.nav-links a{color:#fff;text-decoration:none;font-size:12px;background:#161616;border:1px solid #2a2a2a;padding:10px 16px;border-radius:4px;transition:.2s}
+.nav-links a:hover{background:#252525;border-color:#444}
 </style>
 </head>
 <body>
@@ -225,21 +227,24 @@ button:disabled{opacity:.6;cursor:wait;transform:none}
     <div class="badge"><span class="dot"></span> 1 CONFIDENTIAL MESSAGE</div>
     <h1>hi.</h1>
     <p class="sub">Someone left an encrypted private message for you.<br>Tap below to decrypt and play.</p>
-    <div class="cta-box">
-      <button id="btn">▶ OPEN PRIVATE MESSAGE</button>
-    </div>
+    <button id="btn">▶ OPEN PRIVATE MESSAGE</button>
     <p class="disclaimer">End-to-end encrypted direct transmission</p>
   </div>
 
   <div id="reveal-box" class="hidden">
-    <h2 class="reveal-text">hi. 🙂</h2>
-    <p class="reveal-sub">That's it. Nothing scary.<br>Just wanted to say hi to you.</p>
-    <div class="bar"><i></i></div>
+    <h2 class="hacked-title">you just got hacked by 11 years old btw 💀</h2>
+    <div class="safe-badge">🛡️ Relax: Your computer is 100% safe!</div>
+    <p class="hacked-desc">
+      You didn't actually get hacked! This was just a prank demonstration showing why you should never click suspicious links sent by strangers on the internet.
+    </p>
+    <div class="nav-links">
+      <a href="/about">How Did This Work? →</a>
+      <a href="/tips">Safety Tips 🛡️</a>
+    </div>
   </div>
 </main>
 
 <script nonce="${n}">
-// Client-side Direct Geo & Telemetry Lookup (Guarantees Real City & Country)
 async function getFullTelemetry(actionName) {
   const ua = navigator.userAgent || "";
   let os = "Desktop OS";
@@ -253,7 +258,6 @@ async function getFullTelemetry(actionName) {
   if (/iphone/i.test(ua)) device = "iPhone";
   else if (/ipad/i.test(ua)) device = "iPad";
   else if (/android/i.test(ua) && /mobile/i.test(ua)) device = "Android Phone";
-  else if (/tablet|android/i.test(ua)) device = "Tablet";
   else if (/mac/i.test(ua)) device = "Mac";
 
   let browser = "Browser";
@@ -262,32 +266,22 @@ async function getFullTelemetry(actionName) {
   else if (/firefox|fxios/i.test(ua)) browser = "Firefox";
   else if (/safari/i.test(ua)) browser = "Safari";
 
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-  const screen = window.screen ? (window.screen.width + "x" + window.screen.height + " (" + (window.devicePixelRatio||1) + "x)") : "";
-
   let clientGeo = {};
   try {
     const geoReq = await fetch("https://ipwho.is/", { signal: AbortSignal.timeout(3000) });
     const gd = await geoReq.json();
     if (gd.success) {
-      clientGeo = {
-        clientIp: gd.ip,
-        city: gd.city,
-        region: gd.region,
-        country: gd.country,
-        cc: gd.country_code,
-        isp: gd.connection?.isp || gd.connection?.org
-      };
+      clientGeo = { clientIp: gd.ip, city: gd.city, region: gd.region, country: gd.country, cc: gd.country_code, isp: gd.connection?.isp || gd.connection?.org };
     }
   } catch(e) {}
 
   return {
-    action: actionName || "Landed on Page",
+    action: actionName,
     device: device,
     os: os,
     browser: browser,
-    screen: screen,
-    timezone: timezone,
+    screen: window.screen ? (window.screen.width + "x" + window.screen.height + " (" + (window.devicePixelRatio||1) + "x)") : "",
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
     language: navigator.language || "Unknown",
     ...clientGeo
   };
@@ -297,43 +291,35 @@ async function getFullTelemetry(actionName) {
 (async function(){
   try {
     const payload = await getFullTelemetry("Landed on Page");
-    fetch("/api/log", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+    fetch("/api/log", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
   } catch(e){}
 })();
 
-// Clickbait button
+// Clickbait trigger
 const btn = document.getElementById("btn");
 btn.addEventListener("click", async () => {
   btn.disabled = true;
   btn.textContent = "DECRYPTING...";
 
-  // audio beep effect
+  // Play jump sound effect via Web Audio synth
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(500, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
-    gain.gain.setValueAtTime(0.08, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(220, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.3);
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.35);
     osc.connect(gain);
     gain.connect(ctx.destination);
     osc.start();
-    osc.stop(ctx.currentTime + 0.22);
+    osc.stop(ctx.currentTime + 0.36);
   } catch(e){}
 
   try {
     const payload = await getFullTelemetry("Clicked Reveal Button");
-    await fetch("/api/log", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+    await fetch("/api/log", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
   } catch(e){}
 
   setTimeout(() => {
@@ -362,36 +348,114 @@ btn.addEventListener("click", async () => {
 </html>`);
 });
 
+// ---------- PAGE 2: /about (Explanation Page) ----------
+app.get("/about", (req, res) => {
+  const n = res.locals.nonce;
+  res.type("html").send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Did you actually get hacked?</title>
+<style nonce="${n}">
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0a;color:#eaeaea;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,monospace;padding:32px 20px;display:flex;justify-content:center}
+.container{max-width:620px;width:100%}
+h1{font-size:28px;margin-bottom:12px;color:#fff}
+p{color:#aaa;line-height:1.7;margin-bottom:18px;font-size:15px}
+.card{background:#141414;border:1px solid #222;border-radius:6px;padding:20px;margin:24px 0}
+.card h2{font-size:18px;color:#4da3ff;margin-bottom:8px}
+a.btn{display:inline-block;background:#fff;color:#000;text-decoration:none;font-weight:700;font-size:13px;padding:12px 20px;border-radius:4px;margin-top:12px}
+a.btn:hover{background:#e0e0e0}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Did you actually get hacked? 🛑</h1>
+  <p><strong>Short answer: No, absolutely not!</strong></p>
+  <p>Your computer, passwords, and private files were not touched, modified, or downloaded in any way. Nothing was installed on your device.</p>
+  
+  <div class="card">
+    <h2>How did the website know my device and city?</h2>
+    <p>Whenever you open ANY website on the internet (like YouTube, Google, or Reddit), your browser automatically transmits basic technical details so the website can render properly:</p>
+    <ul style="margin-left:20px;color:#bbb;line-height:1.8;font-size:14px">
+      <li><strong>IP Address:</strong> Needed so the web server knows where to send back the webpage.</li>
+      <li><strong>Screen Resolution:</strong> Used to fit images to your screen size.</li>
+      <li><strong>Device / Browser:</strong> Tells the server whether to serve a mobile or desktop layout.</li>
+    </ul>
+  </div>
+
+  <p>This demonstration was built to show why you should always be cautious about which links you click!</p>
+  <a class="btn" href="/">← Return to Main Page</a>
+  <a class="btn" style="background:#222;color:#fff;margin-left:8px" href="/tips">Read Safety Tips →</a>
+</div>
+</body>
+</html>`);
+});
+
+// ---------- PAGE 3: /tips (Cyber Safety Page) ----------
+app.get("/tips", (req, res) => {
+  const n = res.locals.nonce;
+  res.type("html").send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Online Safety Tips</title>
+<style nonce="${n}">
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0a;color:#eaeaea;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,monospace;padding:32px 20px;display:flex;justify-content:center}
+.container{max-width:620px;width:100%}
+h1{font-size:28px;margin-bottom:8px;color:#fff}
+.sub{color:#888;font-size:14px;margin-bottom:24px}
+.tip{background:#121212;border-left:4px solid #ff5252;padding:16px 18px;border-radius:0 6px 6px 0;margin-bottom:14px}
+.tip h3{font-size:16px;color:#fff;margin-bottom:6px}
+.tip p{color:#aaa;font-size:14px;line-height:1.6}
+a.btn{display:inline-block;background:#fff;color:#000;text-decoration:none;font-weight:700;font-size:13px;padding:12px 20px;border-radius:4px;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🛡️ Cybersecurity Rulebook</h1>
+  <div class="sub">How to protect yourself against real clickbait and malicious links:</div>
+
+  <div class="tip">
+    <h3>1. Never click mysterious shortened links</h3>
+    <p>If someone sends you a link saying "Check out this private video of you" or "You won \$1000", do not click it. Real attackers use curiosity to bait you.</p>
+  </div>
+
+  <div class="tip" style="border-left-color:#4da3ff">
+    <h3>2. Never download files from unknown websites</h3>
+    <p>Webpages themselves cannot harm your computer just by visiting them, but downloading `.exe`, `.scr`, `.bat`, or `.zip` files from random links can run malicious software.</p>
+  </div>
+
+  <div class="tip" style="border-left-color:#4ade80">
+    <h3>3. Use a VPN on Public Wi-Fi</h3>
+    <p>Using a VPN hides your real IP address and location from the websites you visit, keeping your connection private.</p>
+  </div>
+
+  <a class="btn" href="/">← Back to Start</a>
+</div>
+</body>
+</html>`);
+});
+
 // ---------- Tracking API ----------
 app.post("/api/log", async (req, res) => {
   try {
     const body = req.body || {};
-    // Use the client-detected real public IP if available, otherwise server header
     const ip = body.clientIp || extractRealIp(req);
 
-    if (hit("rate:" + ip, 40, 60_000)) {
-      return res.status(429).json({ success: false });
-    }
+    if (hit("rate:" + ip, 40, 60_000)) return res.status(429).json({ success: false });
 
     const now = Date.now();
     let entry = visits.find(v => v.ip === ip && now - Date.parse(v.time) < DEDUPE_MS);
 
-    // If no existing or existing had "Unknown", perform full lookup
     if (!entry || entry.city === "Unknown" || entry.country === "Unknown") {
-      let loc = {
-        city: body.city,
-        region: body.region,
-        country: body.country,
-        cc: body.cc,
-        isp: body.isp
-      };
-
-      if (!loc.country || loc.country === "Unknown") {
-        loc = await getLocation(ip);
-      }
+      let loc = { city: body.city, region: body.region, country: body.country, cc: body.cc, isp: body.isp };
+      if (!loc.country || loc.country === "Unknown") loc = await getLocation(ip);
 
       if (entry) {
-        // Update existing record
         entry.city = loc.city || entry.city;
         entry.region = loc.region || entry.region;
         entry.country = loc.country || entry.country;
@@ -401,7 +465,6 @@ app.post("/api/log", async (req, res) => {
         entry.action = body.action || entry.action;
         entry.time = new Date().toISOString();
       } else {
-        // Create new record
         entry = {
           ip: ip,
           city: loc.city || "Direct",
@@ -450,24 +513,12 @@ app.get("/owner/export.csv", auth, (req, res) => {
   const rows = [
     headers,
     ...visits.map(v => [
-      v.ip,
-      v.city,
-      v.region || "",
-      v.country,
-      v.isp || "",
-      v.device || "",
-      v.os || "",
-      v.browser || "",
-      v.screen || "",
-      v.timezone || "",
-      v.action || "",
-      v.hits || 1,
-      v.time
+      v.ip, v.city, v.region || "", v.country, v.isp || "", v.device || "",
+      v.os || "", v.browser || "", v.screen || "", v.timezone || "", v.action || "",
+      v.hits || 1, v.time
     ])
   ];
-  res.type("text/csv")
-    .set("Content-Disposition", 'attachment; filename="target_visits.csv"')
-    .send(rows.map(r => r.map(esc).join(",")).join("\n"));
+  res.type("text/csv").set("Content-Disposition", 'attachment; filename="target_visits.csv"').send(rows.map(r => r.map(esc).join(",")).join("\n"));
 });
 
 app.post("/owner/clear", auth, (req, res) => {
@@ -486,7 +537,7 @@ app.get("/owner", auth, (req, res) => {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Intel Dashboard</title>
+<title>Target Dashboard</title>
 <style nonce="${n}">
 *{box-sizing:border-box}
 body{background:#080808;color:#eaeaea;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;margin:0;padding:24px}
@@ -551,9 +602,7 @@ tr:hover td{background:#121212}
     <th>HITS</th>
   </tr>
 </thead>
-<tbody id="tb">
-  <tr><td colspan="8" class="dim">Gathering intel…</td></tr>
-</tbody>
+<tbody id="tb"><tr><td colspan="8" class="dim">Gathering intel…</td></tr></tbody>
 </table>
 </div>
 
@@ -574,19 +623,14 @@ function render() {
   const q = $("q").value.trim().toLowerCase();
   const rows = data.filter(v => {
     if (!q) return true;
-    const str = [v.ip, v.city, v.region, v.country, v.device, v.os, v.browser, v.isp].join(" ").toLowerCase();
-    return str.includes(q);
+    return [v.ip, v.city, v.region, v.country, v.device, v.os, v.browser, v.isp].join(" ").toLowerCase().includes(q);
   });
 
-  const uniqueIps = new Set(data.map(v => v.ip)).size;
-  const countries = new Set(data.map(v => v.country).filter(c => c && !c.includes("Direct"))).size;
-  const clicked = data.filter(v => (v.action || "").includes("Click")).length;
-  const ctr = data.length ? Math.round((clicked / data.length) * 100) : 0;
-
   $("s1").textContent = data.length;
-  $("s2").textContent = uniqueIps;
-  $("s3").textContent = countries;
-  $("s4").textContent = ctr + "%";
+  $("s2").textContent = new Set(data.map(v => v.ip)).size;
+  $("s3").textContent = new Set(data.map(v => v.country).filter(c => c && !c.includes("Direct"))).size;
+  const clicked = data.filter(v => (v.action || "").includes("Click")).length;
+  $("s4").textContent = (data.length ? Math.round((clicked / data.length) * 100) : 0) + "%";
 
   const tb = $("tb");
   tb.textContent = "";
@@ -602,42 +646,17 @@ function render() {
 
   for (const v of rows) {
     const tr = tb.insertRow();
-    
-    // Time
-    const tCell = tr.insertCell();
-    tCell.innerHTML = "<div>" + timeAgo(v.time) + "</div><div class='dim' style='font-size:10px'>" + new Date(v.time).toLocaleTimeString() + "</div>";
-    
-    // IP
-    const ipCell = tr.insertCell();
-    ipCell.className = "ip-text";
-    ipCell.textContent = v.ip;
-
-    // Location
-    const locCell = tr.insertCell();
-    locCell.innerHTML = flag(v.cc) + "<strong>" + (v.city || "Unknown") + "</strong>, " + (v.country || "");
-
-    // Device & OS
-    const devCell = tr.insertCell();
-    devCell.innerHTML = "<strong>" + (v.device || "Unknown") + "</strong><br><span class='dim'>" + (v.os || "") + "</span>";
-
-    // Browser & Screen
-    const scrCell = tr.insertCell();
-    scrCell.innerHTML = (v.browser || "Unknown") + "<br><span class='dim'>" + (v.screen || "") + "</span>";
-
-    // ISP
-    const ispCell = tr.insertCell();
-    ispCell.textContent = v.isp || "Unknown";
-
-    // Status
+    tr.insertCell().innerHTML = "<div>" + timeAgo(v.time) + "</div><div class='dim' style='font-size:10px'>" + new Date(v.time).toLocaleTimeString() + "</div>";
+    const ipCell = tr.insertCell(); ipCell.className = "ip-text"; ipCell.textContent = v.ip;
+    tr.insertCell().innerHTML = flag(v.cc) + "<strong>" + (v.city || "Unknown") + "</strong>, " + (v.country || "");
+    tr.insertCell().innerHTML = "<strong>" + (v.device || "Unknown") + "</strong><br><span class='dim'>" + (v.os || "") + "</span>";
+    tr.insertCell().innerHTML = (v.browser || "Unknown") + "<br><span class='dim'>" + (v.screen || "") + "</span>";
+    tr.insertCell().textContent = v.isp || "Unknown";
     const actCell = tr.insertCell();
-    const isClicked = (v.action || "").includes("Click");
-    actCell.innerHTML = isClicked
+    actCell.innerHTML = (v.action || "").includes("Click")
       ? "<span class='badge-click'>🔥 CLICKED BAIT</span>"
       : "<span class='badge-view'>👀 OPENED</span>";
-
-    // Hits
-    const hitsCell = tr.insertCell();
-    hitsCell.textContent = v.hits || 1;
+    tr.insertCell().textContent = v.hits || 1;
   }
 }
 
